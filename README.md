@@ -10,12 +10,15 @@ Generate intelligent git commit messages using Claude AI. This PowerShell module
 - ✏️ **Interactive Workflow**: Review, edit, or cancel before committing
 - 🌍 **UTF-8 Support**: Handles international characters correctly
 - ⚡ **PowerShell 5.1+ Compatible**: Works with Windows PowerShell and PowerShell Core
+- 🚀 **Git Push Support**: Optional flag to push after committing
+- 📦 **Google Apps Script Integration**: Optional clasp push support for GAS projects
 
 ## Prerequisites
 
 - PowerShell 5.1 or higher
 - Git installed and accessible from PowerShell
 - Anthropic API key (get one from [Anthropic Console](https://console.anthropic.com/))
+- (Optional) Clasp CLI for Google Apps Script projects (`npm install -g @google/clasp`)
 
 ## Installation
 
@@ -83,17 +86,32 @@ Add-Content $PROFILE '$env:ANTHROPIC_API_KEY = "sk-ant-api04-your-key-here"'
 Navigate to any git repository with changes and run:
 
 ```powershell
+# Basic commit
 aicommit
+
+# Commit and push to git remote
+aicommit -push
+
+# Commit and push to clasp (for Google Apps Script projects)
+aicommit -clasp
+
+# Commit and push to both git and clasp
+aicommit -push -clasp
 ```
 
 The tool will:
-1. Analyze your git diff (both staged and unstaged changes)
-2. Send the diff to Claude AI for analysis
-3. Present a suggested commit message
-4. Give you options to:
+1. Check if you're in a valid git repository
+2. If using -clasp, verify .clasp.json exists and confirm you've pulled latest changes
+3. Analyze your git diff (both staged and unstaged changes)
+4. Send the diff to Claude AI for analysis
+5. Present a suggested commit message
+6. Give you options to:
    - **Accept** (y/yes or Enter): Use the suggested message
    - **Edit** (e/edit): Modify the header and/or description
    - **Cancel** (c/cancel): Abort the commit
+7. Stage and commit changes
+8. Push to git remote (if -push flag used)
+9. Push to clasp (if -clasp flag used)
 
 ### Example Workflow
 
@@ -115,6 +133,25 @@ Committing...
 
 Commit successful!
 Created: a3f2d45 Add user authentication module
+```
+#### Example with Flags
+```powershell
+# Push to git remote after commit
+PS C:\MyProject> aicommit -push
+[... commit process ...]
+Commit successful!
+Created: a3f2d45 Add user authentication module
+Pushing to remote...
+Push successful!
+
+# For Google Apps Script project with clasp
+PS C:\MyGASProject> aicommit -clasp
+Have you pulled from clasp? (y/n): y
+[... commit process ...]
+Commit successful!
+Created: b4g3e56 Update Google Sheets functions
+Pushing to clasp...
+Clasp push successful!
 ```
 
 ## How It Works

@@ -1,6 +1,7 @@
 function aicommit {
     param(
-        [string]$Action
+        [switch]$push,
+        [switch]$clasp
     )
     # Check if we're in a git repository
     try {
@@ -9,6 +10,21 @@ function aicommit {
     catch {
         Write-Host "Error: Not in a git repository" -ForegroundColor Red
         return
+    }
+    # Check for clasp if flag is set
+    if ($clasp) {
+        # Check if .clasp.json exists
+        if (!(Test-Path ".clasp.json")) {
+            Write-Host "Error: Not in a clasp repository (.clasp.json not found)" -ForegroundColor Red
+            return
+        }
+        
+        # Ask if clasp has been pulled
+        $claspPulled = Read-Host "Have you pulled from clasp? (y/n)"
+        if ($claspPulled.ToLower() -notin @('y', 'yes')) {
+            Write-Host "Please run 'clasp pull' first, then try again" -ForegroundColor Yellow
+            return
+        }
     }
 
     # Check for API key early
@@ -264,7 +280,7 @@ $fullDiff
         git add . 2>&1 | Out-Null
         
         Write-Host "Committing..." -ForegroundColor Yellow
-        git commit -m $finalMessage
+        git commit -m "$finalMessage"
         
         if ($LASTEXITCODE -eq 0) {
             Write-Host "`nCommit successful!" -ForegroundColor Green
@@ -274,7 +290,7 @@ $fullDiff
             Write-Host "Created: $lastCommit" -ForegroundColor Cyan
 
             # Push if requested
-            if ($Action -eq 'push') {
+            if ($push) {
                 Write-Host "Pushing to remote..." -ForegroundColor Yellow
                 git push
                 if ($LASTEXITCODE -eq 0) {
@@ -282,6 +298,17 @@ $fullDiff
                 }
                 else {
                     Write-Host "Push failed with exit code: $LASTEXITCODE" -ForegroundColor Red
+                }
+            }
+            # Push to clasp if flag was set
+            if ($clasp) {
+                Write-Host "Pushing to clasp..." -ForegroundColor Yellow
+                clasp push
+                if ($LASTEXITCODE -eq 0) {
+                    Write-Host "Clasp push successful!" -ForegroundColor Green
+                }
+                else {
+                    Write-Host "Clasp push failed with exit code: $LASTEXITCODE" -ForegroundColor Red
                 }
             }
         }
