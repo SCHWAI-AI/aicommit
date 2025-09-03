@@ -1,4 +1,7 @@
 function aicommit {
+    param(
+        [string]$Action
+    )
     # Check if we're in a git repository
     try {
         git rev-parse --git-dir | Out-Null
@@ -269,6 +272,18 @@ $fullDiff
             # Show what was committed
             $lastCommit = git log -1 --oneline
             Write-Host "Created: $lastCommit" -ForegroundColor Cyan
+
+            # Push if requested
+            if ($Action -eq 'push') {
+                Write-Host "Pushing to remote..." -ForegroundColor Yellow
+                git push
+                if ($LASTEXITCODE -eq 0) {
+                    Write-Host "Push successful!" -ForegroundColor Green
+                }
+                else {
+                    Write-Host "Push failed with exit code: $LASTEXITCODE" -ForegroundColor Red
+                }
+            }
         }
         else {
             Write-Host "Git commit failed with exit code: $LASTEXITCODE" -ForegroundColor Red
