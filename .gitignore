@@ -1,0 +1,57 @@
+# API Keys and Secrets - NEVER commit these
+.env
+*.key
+*.apikey
+secrets.txt
+secrets.json
+config.secret.json
+*_SECRET*
+*_APIKEY*
+
+# Debug and test files
+debug_*.json
+debug_*.txt
+test/
+testing/
+*.test.ps1
+
+# IDE and Editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# PowerShell specific
+*.ps1xml
+Export-ModuleMember.ps1
+
+# Backup files
+*.bak
+*.backup
+*.old
+*.orig
+
+# Log files
+*.log
+logs/
+
+# Personal notes
+notes.txt
+TODO.txt
+personal/
+
+# Windows
+Desktop.ini
+$RECYCLE.BIN/
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# User-specific files
+*.user
+*.suo
