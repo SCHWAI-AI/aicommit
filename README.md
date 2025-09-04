@@ -173,7 +173,7 @@ Clasp push successful!
 
 The module uses these default settings:
 
-- **Model**: Claude Sonnet 4 (`claude-sonnet-4-20250514`)
+- **Model**: Claude Haiku 3.5 (`claude-3-5-haiku-20241022`)
 - **Max Diff Size**: 30,000 characters (truncates if larger)
 - **Max Tokens**: 1,000 (for AI response)
 
@@ -194,6 +194,10 @@ The module uses these default settings:
 ### Encoding Issues
 - The module sets UTF-8 encoding automatically
 - If you see character issues, ensure your terminal supports UTF-8
+
+### Module not updating after changes
+If you've modified the module files and changes aren't reflected:
+- Reload the module: `Import-Module AICommit -Force`
 
 ## Security
 
