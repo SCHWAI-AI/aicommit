@@ -225,51 +225,64 @@ $fullDiff
     $header = ($lines | Where-Object { $_ -match "^HEADER:" }) -replace "^HEADER:\s*", ""
     $description = ($lines | Where-Object { $_ -match "^DESCRIPTION:" }) -replace "^DESCRIPTION:\s*", ""
 
-    # Get user decision
-    do {
-        $choice = Read-Host "Use this message? (y)es / (e)dit / (c)ancel"
-        $choice = $choice.ToLower()
-    } while ($choice -notin @('y', 'yes', 'e', 'edit', 'c', 'cancel', ''))
-
-    # Default to yes if just Enter pressed
-    if ([string]::IsNullOrWhiteSpace($choice)) { 
-        $choice = 'y' 
-    }
-
-    # Process user choice
-    $finalMessage = ""
+    # Interactive commit message loop
+    $committed = $false
+    $currentHeader = $header
+    $currentDescription = $description
     
-    switch ($choice) {
-        {$_ -in @('c', 'cancel')} {
-            Write-Host "Commit cancelled" -ForegroundColor Yellow
-            return
+    while (-not $committed) {
+        # Display current message
+        Write-Host "`n--- CURRENT COMMIT MESSAGE ---" -ForegroundColor Cyan
+        Write-Host "HEADER: $currentHeader" -ForegroundColor White
+        if (![string]::IsNullOrWhiteSpace($currentDescription)) {
+            Write-Host "DESCRIPTION: $currentDescription" -ForegroundColor White
+        }
+        Write-Host "--- END MESSAGE ---`n" -ForegroundColor Cyan
+        
+        # Get user decision
+        do {
+            $choice = Read-Host "Use this message? (y)es / (e)dit / (c)ancel"
+            $choice = $choice.ToLower()
+        } while ($choice -notin @('y', 'yes', 'e', 'edit', 'c', 'cancel', ''))
+        
+        # Default to yes if just Enter pressed
+        if ([string]::IsNullOrWhiteSpace($choice)) { 
+            $choice = 'y' 
         }
         
-        {$_ -in @('e', 'edit')} {
-            Write-Host "`nEdit your commit message:" -ForegroundColor Yellow
-            
-            $newHeader = Read-Host "Header [$header]"
-            if ([string]::IsNullOrWhiteSpace($newHeader)) { 
-                $newHeader = $header 
+        # Process user choice
+        switch ($choice) {
+            {$_ -in @('c', 'cancel')} {
+                Write-Host "Commit cancelled" -ForegroundColor Yellow
+                return
             }
             
-            $newDescription = Read-Host "Description [$description]"
-            if ([string]::IsNullOrWhiteSpace($newDescription)) { 
-                $newDescription = $description 
+            {$_ -in @('e', 'edit')} {
+                Write-Host "`nEdit your commit message:" -ForegroundColor Yellow
+                
+                $newHeader = Read-Host "Header [$currentHeader]"
+                if ([string]::IsNullOrWhiteSpace($newHeader)) { 
+                    $newHeader = $currentHeader 
+                }
+                
+                $newDescription = Read-Host "Description [$currentDescription]"
+                if ([string]::IsNullOrWhiteSpace($newDescription)) { 
+                    $newDescription = $currentDescription 
+                }
+                
+                # Update current values for next loop iteration
+                $currentHeader = $newHeader
+                $currentDescription = $newDescription
+                # Loop continues to show the edited message
             }
             
-            $finalMessage = if ([string]::IsNullOrWhiteSpace($newDescription)) { 
-                $newHeader 
-            } else { 
-                "$newHeader`n`n$newDescription" 
-            }
-        }
-        
-        {$_ -in @('y', 'yes')} {
-            $finalMessage = if ([string]::IsNullOrWhiteSpace($description)) { 
-                $header 
-            } else { 
-                "$header`n`n$description" 
+            {$_ -in @('y', 'yes')} {
+                $finalMessage = if ([string]::IsNullOrWhiteSpace($currentDescription)) { 
+                    $currentHeader 
+                } else { 
+                    "$currentHeader`n`n$currentDescription" 
+                }
+                $committed = $true
             }
         }
     }
