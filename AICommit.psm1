@@ -258,21 +258,34 @@ $fullDiff
             }
             
             {$_ -in @('e', 'edit')} {
-                Write-Host "`nEdit your commit message:" -ForegroundColor Yellow
+                Write-Host "`nOpening editor..." -ForegroundColor Yellow
+                Write-Host "Edit the message, then SAVE (Ctrl+S) and CLOSE notepad to continue" -ForegroundColor Cyan
                 
-                $newHeader = Read-Host "Header [$currentHeader]"
-                if ([string]::IsNullOrWhiteSpace($newHeader)) { 
-                    $newHeader = $currentHeader 
-                }
+                # Create temp file with current message
+                $tempFile = [System.IO.Path]::GetTempFileName()
+                $tempFile = [System.IO.Path]::ChangeExtension($tempFile, ".txt")
                 
-                $newDescription = Read-Host "Description [$currentDescription]"
-                if ([string]::IsNullOrWhiteSpace($newDescription)) { 
-                    $newDescription = $currentDescription 
-                }
+                # Write current message to temp file
+                $editContent = "HEADER: $currentHeader`n`nDESCRIPTION: $currentDescription"
+                Set-Content -Path $tempFile -Value $editContent -Encoding UTF8
+                
+                # Open in notepad and wait
+                Start-Process notepad.exe -ArgumentList $tempFile -Wait
+                
+                # Read back the edited content
+                $editedContent = Get-Content -Path $tempFile -Raw -Encoding UTF8
+                
+                # Parse the edited content
+                $editedLines = $editedContent -split "`n"
+                $newHeader = ($editedLines | Where-Object { $_ -match "^HEADER:" }) -replace "^HEADER:\s*", ""
+                $newDescription = ($editedLines | Where-Object { $_ -match "^DESCRIPTION:" }) -replace "^DESCRIPTION:\s*", ""
+                
+                # Clean up temp file
+                Remove-Item $tempFile -Force -ErrorAction SilentlyContinue
                 
                 # Update current values for next loop iteration
-                $currentHeader = $newHeader
-                $currentDescription = $newDescription
+                $currentHeader = if ($newHeader) { $newHeader } else { $currentHeader }
+                $currentDescription = if ($newDescription) { $newDescription } else { $currentDescription }
                 # Loop continues to show the edited message
             }
             
