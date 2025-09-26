@@ -27,8 +27,12 @@ function aicommit {
         }
     }
 
-    # Model configuration - Change this to switch between models
-    $AI_MODEL = "gemini-2.5-flash"  # Options: any Claude or Gemini model, suggested are gemini-2.5-flash, claude-3-5-haiku-20241022, 
+    # Model configuration - Check for user preference, if none use default
+    $AI_MODEL = if ($env:AI_COMMIT_MODEL) { 
+        $env:AI_COMMIT_MODEL 
+    } else { 
+        "gemini-2.5-flash"  # Default model
+    }
 
     # Detect carrier and check for appropriate API key
     if ($AI_MODEL -like "claude-*") {
@@ -101,8 +105,12 @@ function aicommit {
         return
     }
 
-    # Truncate if necessary (increased limit for better context)
-    $maxLength = 30000
+    # Truncate if necessary (configurable via environment variable)
+    $maxLength = if ($env:AI_COMMIT_MAX_DIFF_LENGTH) { 
+        [int]$env:AI_COMMIT_MAX_DIFF_LENGTH 
+    } else { 
+        30000  # Default: 30,000 characters
+    }
     if ($fullDiff.Length -gt $maxLength) {
         $fullDiff = $fullDiff.Substring(0, $maxLength) + "`n... (diff truncated)"
         Write-Host "Note: Diff was truncated due to length" -ForegroundColor Yellow

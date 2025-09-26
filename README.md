@@ -54,7 +54,16 @@ notepad $PROFILE
 
 # Add these lines:
 Import-Module "C:\path\to\aicommit-powershell\AICommit.psm1"
-$env:ANTHROPIC_API_KEY = "your-api-key-here"
+
+# API Keys (set the ones you need)
+$env:ANTHROPIC_API_KEY = "your-anthropic-key-here"
+$env:GEMINI_API_KEY = "your-google-key-here"
+
+# Your preferred model (optional, defaults to gemini-2.5-flash)
+$env:AI_COMMIT_MODEL = "gemini-2.5-flash"
+
+# Increase diff size for large commits (Optional, default is 30000 characters)
+$env:AI_COMMIT_MAX_DIFF_LENGTH = "50000"
 ```
 
 ## Setup
@@ -81,6 +90,20 @@ And restart your profile:
 . $PROFILE
 ```
 
+### Setting Your Preferred Model (Optional)
+
+Choose your preferred AI model by setting an environment variable:
+
+```powershell
+# For Gemini (default):
+$env:AI_COMMIT_MODEL = "gemini-2.5-flash"
+
+# For Claude:
+powershell$env:AI_COMMIT_MODEL = "claude-3-5-haiku-20241022"
+
+# For permanent setup:
+Add-Content $PROFILE '$env:AI_COMMIT_MODEL = "gemini-2.5-flash"'
+```
 
 ## Usage
 
@@ -172,26 +195,13 @@ Clasp push successful!
 
 ## Configuration
 
-The module uses these default settings:
+The module uses these environment variables:
 
-- **Model**: Gemini 2.5 Flash (`gemini-2.5-flash`)
-- **Max Diff Size**: 30,000 characters (truncates if larger)
-- **Max Tokens**: 1,000 (for AI response)
+- **`AI_COMMIT_MODEL`**: Your preferred AI model
+- **`AI_COMMIT_MAX_DIFF_LENGTH`**: Maximum diff size in characters (default: `30000`)
+- **`GEMINI_API_KEY`**: Required for Gemini models
+- **`ANTHROPIC_API_KEY`**: Required for Claude models
 
-## Switching Models
-
-To switch between AI models, edit the `AICommit.psm1` file and change the `$AI_MODEL` variable at the top of the `aicommit` function:
-```powershell
-# For Gemini (default)
-$AI_MODEL = "gemini-2.5-flash"
-
-# For Claude
-$AI_MODEL = "claude-3-5-haiku-20241022"
-```
-After changing, reload the module:
-```powershell
-Import-Module AICommit -Force
-```
 
 ## Troubleshooting
 
