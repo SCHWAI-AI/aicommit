@@ -55,7 +55,23 @@ function aicommit {
         $fullDiff += "=== NEW FILES ===`n"
         $untrackedFiles -split "`n" | ForEach-Object {
             if (![string]::IsNullOrWhiteSpace($_)) {
-                $fullDiff += "New file: $_`n"
+                $fullDiff += "`n--- New file: $_ ---`n"
+                # Try to read the file content
+                if (Test-Path $_) {
+                    try {
+                        $fileContent = Get-Content $_ -Raw -ErrorAction Stop
+                        # Add line numbers for consistency with git diff format
+                        $lineNumber = 1
+                        $fileContent -split "`n" | ForEach-Object {
+                            $fullDiff += "+$_`n"
+                            $lineNumber++
+                        }
+                    }
+                    catch {
+                        $fullDiff += "[Could not read file content: $($_.Exception.Message)]`n"
+                    }
+                }
+                $fullDiff += "`n"
             }
         }
     }
