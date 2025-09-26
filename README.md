@@ -4,8 +4,9 @@ Generate intelligent git commit messages using Claude AI. This PowerShell module
 
 ## Features
 
-- 🤖 **AI-Powered Analysis**: Uses Claude AI to understand your code changes
+- 🤖 **AI-Powered Analysis**: Uses AI to understand your code changes
 - 📝 **Professional Format**: Generates commit messages with proper header and description
+- 🔄 **Multi-Model Support**: Works with both Claude (Anthropic) and Gemini (Google) AI models
 - 🔍 **Comprehensive Diff Analysis**: Analyzes both tracked and untracked files
 - ✏️ **Interactive Workflow**: Review, edit, or cancel before committing
 - 🌍 **UTF-8 Support**: Handles international characters correctly
@@ -17,7 +18,7 @@ Generate intelligent git commit messages using Claude AI. This PowerShell module
 
 - PowerShell 5.1 or higher
 - Git installed and accessible from PowerShell
-- Anthropic API key (get one from [Anthropic Console](https://console.anthropic.com/))
+- AI API key: Either Anthropic ([Anthropic Console](https://console.anthropic.com/)) or Google ([Google AI Studio](https://aistudio.google.com/apikey))
 - (Optional) Clasp CLI for Google Apps Script projects (`npm install -g @google/clasp`)
 
 ## Installation
@@ -60,26 +61,26 @@ $env:ANTHROPIC_API_KEY = "your-api-key-here"
 
 ### Setting Your API Key
 
-You need to set your Anthropic API key as an environment variable. Choose one method:
+The module supports both Claude (Anthropic) and Gemini (Google) models. Set the appropriate API key for your chosen model:
 
-**Temporary (current session only):**
+**For Gemini (default):**
+```powershell
+$env:GEMINI_API_KEY = "your-google-api-key-here"
+```
+For Claude:
 ```powershell
 $env:ANTHROPIC_API_KEY = "sk-ant-api04-your-key-here"
 ```
-
-**Permanent (via PowerShell profile):**
+For permanent setup (add both to your profile if you want to switch between them):
 ```powershell
-# Add to your profile
+Add-Content $PROFILE '$env:GEMINI_API_KEY = "your-google-api-key-here"'
 Add-Content $PROFILE '$env:ANTHROPIC_API_KEY = "sk-ant-api04-your-key-here"'
 ```
-
-**Permanent (system environment variable):**
+And restart your profile:
 ```powershell
-# For current user
-[System.Environment]::SetEnvironmentVariable("ANTHROPIC_API_KEY", "sk-ant-api04-your-key-here", "User")
-
-# Restart PowerShell after setting
+. $PROFILE
 ```
+
 
 ## Usage
 
@@ -173,17 +174,33 @@ Clasp push successful!
 
 The module uses these default settings:
 
-- **Model**: Claude Haiku 3.5 (`claude-3-5-haiku-20241022`)
+- **Model**: Gemini 2.5 Flash (`gemini-2.5-flash`)
 - **Max Diff Size**: 30,000 characters (truncates if larger)
 - **Max Tokens**: 1,000 (for AI response)
+
+## Switching Models
+
+To switch between AI models, edit the `AICommit.psm1` file and change the `$AI_MODEL` variable at the top of the `aicommit` function:
+```powershell
+# For Gemini (default)
+$AI_MODEL = "gemini-2.5-flash"
+
+# For Claude
+$AI_MODEL = "claude-3-5-haiku-20241022"
+```
+After changing, reload the module:
+```powershell
+Import-Module AICommit -Force
+```
 
 ## Troubleshooting
 
 ### "Not in a git repository"
 - Ensure you're in a directory initialized with `git init`
 
-### "ANTHROPIC_API_KEY environment variable not set"
-- Check your API key is set: `echo $env:ANTHROPIC_API_KEY`
+### "API_KEY environment variable not set"
+- For Gemini: Check with `echo $env:GEMINI_API_KEY`
+- For Claude: Check with `echo $env:ANTHROPIC_API_KEY`
 - Ensure you've restarted PowerShell after setting permanent environment variables
 
 ### API Errors
