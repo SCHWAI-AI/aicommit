@@ -27,10 +27,29 @@ function aicommit {
         }
     }
 
-    # Check for API key early
-    if ([string]::IsNullOrWhiteSpace($env:ANTHROPIC_API_KEY)) {
-        Write-Host "Error: ANTHROPIC_API_KEY environment variable not set" -ForegroundColor Red
-        Write-Host "Set it with: `$env:ANTHROPIC_API_KEY = 'your-api-key-here'" -ForegroundColor Yellow
+    # Model configuration - Change this to switch between models
+    $AI_MODEL = "gemini-2.5-flash"  # Options: any Claude or Gemini model, suggested are gemini-2.5-flash, claude-3-5-haiku-20241022, 
+
+    # Detect carrier and check for appropriate API key
+    if ($AI_MODEL -like "claude-*") {
+        $carrier = "anthropic"
+        $apiKey = $env:ANTHROPIC_API_KEY
+        if ([string]::IsNullOrWhiteSpace($apiKey)) {
+            Write-Host "Error: ANTHROPIC_API_KEY environment variable not set" -ForegroundColor Red
+            Write-Host "Set it with: `$env:ANTHROPIC_API_KEY = 'your-api-key-here'" -ForegroundColor Yellow
+            return
+        }
+    } elseif ($AI_MODEL -like "gemini-*" -or $AI_MODEL -like "models/gemini-*") {
+        $carrier = "google"
+        # Check for Gemini API key
+        $apiKey = $env:GEMINI_API_KEY
+        if ([string]::IsNullOrWhiteSpace($apiKey)) {
+            Write-Host "Error: GEMINI_API_KEY environment variable not set" -ForegroundColor Red
+            Write-Host "Set it with: `$env:GEMINI_API_KEY = 'your-api-key-here'" -ForegroundColor Yellow
+            return
+        }
+    } else {
+        Write-Host "Error: Unknown model carrier for model: $AI_MODEL" -ForegroundColor Red
         return
     }
 
@@ -119,23 +138,52 @@ Now analyze this diff:
 $fullDiff
 "@
 
-    # Build request object using explicit content blocks
-    $messages = @(
-        @{
-            role = "user"
-            content = @(
-                @{ type = "text"; text = $promptContent }
+    # Build request based on carrier
+    if ($carrier -eq "anthropic") {
+        # Claude/Anthropic request format
+        $messages = @(
+            @{
+                role = "user"
+                content = @(
+                    @{ type = "text"; text = $promptContent }
+                )
+            }
+        )
+
+        $requestObj = @{
+            model = $AI_MODEL
+            max_tokens = 1000
+            messages = $messages
+        }
+        
+        $apiUrl = "https://api.anthropic.com/v1/messages"
+        $headers = @{
+            "Content-Type"      = "application/json; charset=utf-8"
+            "x-api-key"         = $apiKey
+            "anthropic-version" = "2023-06-01"
+        }
+    } else {
+        # Gemini/Google request format
+        $requestObj = @{
+            contents = @(
+                @{
+                    parts = @(
+                        @{ text = $promptContent }
+                    )
+                }
             )
         }
-    )
-
-    $requestObj = @{
-        model = "claude-3-5-haiku-20241022"
-        max_tokens = 1000
-        messages = $messages
+        
+        # Handle model name format (add "models/" prefix if not present)
+        $modelName = if ($AI_MODEL -like "models/*") { $AI_MODEL } else { "models/$AI_MODEL" }
+        $apiUrl = "https://generativelanguage.googleapis.com/v1beta/$($modelName):generateContent"
+        $headers = @{
+            "Content-Type"     = "application/json; charset=utf-8"
+            "x-goog-api-key"   = $apiKey
+        }
     }
 
-    # Convert to JSON using PowerShell's native converter
+    # Convert to JSON
     $jsonRequest = $requestObj | ConvertTo-Json -Depth 12 -Compress
 
     # Validate JSON structure
@@ -148,24 +196,18 @@ $fullDiff
         Write-Host "Attempting to continue anyway..." -ForegroundColor Yellow
     }
 
-    # Prepare headers
-    $headers = @{
-        "Content-Type"      = "application/json; charset=utf-8"
-        "x-api-key"         = $env:ANTHROPIC_API_KEY
-        "anthropic-version" = "2023-06-01"
-    }
-
-    # Debug info (comment out in production)
+    # Debug info
+    Write-Host "Using model: $AI_MODEL ($carrier)" -ForegroundColor Cyan
     Write-Host "Request size: $($jsonRequest.Length) characters" -ForegroundColor Cyan
 
-    # Call Claude API (PS5.1/PS7+ compatible)
+    # Call the AI
     try {
         Write-Host "Getting AI suggestion..." -ForegroundColor Yellow
 
         $bodyBytes = [System.Text.Encoding]::UTF8.GetBytes($jsonRequest)
 
         $irmParams = @{
-            Uri     = "https://api.anthropic.com/v1/messages"
+            Uri     = $apiUrl
             Method  = "Post"
             Headers = $headers
             Body    = $bodyBytes
@@ -194,7 +236,13 @@ $fullDiff
             return
         }
 
-        $suggestion = $response.content[0].text
+        # Extract suggestion based on carrier
+        if ($carrier -eq "anthropic") {
+            $suggestion = $response.content[0].text
+        } else {
+            # Gemini response structure
+            $suggestion = $response.candidates[0].content.parts[0].text
+        }
         
         Write-Host "`n--- SUGGESTED COMMIT MESSAGE ---" -ForegroundColor Cyan
         Write-Host $suggestion -ForegroundColor White
@@ -202,7 +250,7 @@ $fullDiff
         
     }
     catch {
-        Write-Host "Error calling Claude API:" -ForegroundColor Red
+        Write-Host "Error calling $carrier API:" -ForegroundColor Red
         if ($_.Exception.Response) {
             try {
                 $statusCode = $_.Exception.Response.StatusCode.value__
