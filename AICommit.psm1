@@ -380,7 +380,8 @@ $fullDiff
         git add . 2>&1 | Out-Null
         
         Write-Host "Committing..." -ForegroundColor Yellow
-        git commit -m "$finalMessage"
+        $escapedMessage = $finalMessage -replace '"', '""'  # Escape any quotes in the message
+        git commit -m "`"$escapedMessage`""
         
         if ($LASTEXITCODE -eq 0) {
             Write-Host "`nCommit successful!" -ForegroundColor Green
