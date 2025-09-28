@@ -251,11 +251,6 @@ $fullDiff
             # Gemini response structure
             $suggestion = $response.candidates[0].content.parts[0].text
         }
-        
-        Write-Host "`n--- SUGGESTED COMMIT MESSAGE ---" -ForegroundColor Cyan
-        Write-Host $suggestion -ForegroundColor White
-        Write-Host "--- END SUGGESTION ---`n" -ForegroundColor Cyan
-        
     }
     catch {
         Write-Host "Error calling $carrier API:" -ForegroundColor Red
@@ -301,15 +296,22 @@ $fullDiff
     $committed = $false
     $currentHeader = $header
     $currentDescription = $description
+    $firstRun = $true
     
     while (-not $committed) {
         # Display current message
-        Write-Host "`n--- CURRENT COMMIT MESSAGE ---" -ForegroundColor Cyan
+        if ($firstRun) {
+            Write-Host "`n--- SUGGESTED COMMIT MESSAGE ---" -ForegroundColor Cyan
+        } else {
+            Write-Host "`n--- CURRENT COMMIT MESSAGE ---" -ForegroundColor Cyan
+        }
         Write-Host "HEADER: $currentHeader" -ForegroundColor White
         if (![string]::IsNullOrWhiteSpace($currentDescription)) {
             Write-Host "DESCRIPTION: $currentDescription" -ForegroundColor White
         }
         Write-Host "--- END MESSAGE ---`n" -ForegroundColor Cyan
+        
+        $firstRun = $false
         
         # Get user decision
         do {
