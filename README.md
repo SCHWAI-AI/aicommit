@@ -13,6 +13,7 @@ Generate intelligent git commit messages using Claude AI. This PowerShell module
 - ⚡ **PowerShell 5.1+ Compatible**: Works with Windows PowerShell and PowerShell Core
 - 🚀 **Git Push Support**: Optional flag to push after committing
 - 📦 **Google Apps Script Integration**: Optional clasp push support for GAS projects
+- ☁️ **Cloudflare Workers Deployment**: Optional wrangler deploy support for Workers projects
 
 ## Prerequisites
 
@@ -20,6 +21,7 @@ Generate intelligent git commit messages using Claude AI. This PowerShell module
 - Git installed and accessible from PowerShell
 - AI API key: Either Anthropic ([Anthropic Console](https://console.anthropic.com/)) or Google ([Google AI Studio](https://aistudio.google.com/apikey))
 - (Optional) Clasp CLI for Google Apps Script projects (`npm install -g @google/clasp`)
+- (Optional) Wrangler CLI for Cloudflare Workers projects (`npm install -g wrangler`)
 
 ## Installation
 
@@ -121,11 +123,14 @@ aicommit -clasp
 
 # Commit and push to both git and clasp
 aicommit -push -clasp
+
+# Commit, push to git, and deploy to wrangler
+aicommit -push -wrangler
 ```
 
 The tool will:
 1. Check if you're in a valid git repository
-2. If using -clasp, verify .clasp.json exists and confirm you've pulled latest changes
+2. If using -clasp, verify .clasp.json exists and confirm you've pulled latest changes. If using -wrangler, verify wrangler.toml exists
 3. Analyze your git diff (both staged and unstaged changes)
 4. Send the diff to Claude AI for analysis
 5. Present a suggested commit message
