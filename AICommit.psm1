@@ -1,7 +1,8 @@
 function aicommit {
     param(
         [switch]$push,
-        [switch]$clasp
+        [switch]$clasp,
+        [switch]$wrangler
     )
     # Check if we're in a git repository
     try {
@@ -23,6 +24,15 @@ function aicommit {
         $claspPulled = Read-Host "Have you pulled from clasp? (y/n)"
         if ($claspPulled.ToLower() -notin @('y', 'yes')) {
             Write-Host "Please run 'clasp pull' first, then try again" -ForegroundColor Yellow
+            return
+        }
+    }
+
+    # Check for wrangler if flag is set
+    if ($wrangler) {
+        # Check if wrangler.toml exists
+        if (!(Test-Path "wrangler.toml")) {
+            Write-Host "Error: Not in a wrangler project (wrangler.toml not found)" -ForegroundColor Red
             return
         }
     }
@@ -410,6 +420,17 @@ $fullDiff
                 }
                 else {
                     Write-Host "Clasp push failed with exit code: $LASTEXITCODE" -ForegroundColor Red
+                }
+            }
+            # Deploy to wrangler if flag was set
+            if ($wrangler) {
+                Write-Host "Deploying to wrangler..." -ForegroundColor Yellow
+                wrangler deploy
+                if ($LASTEXITCODE -eq 0) {
+                    Write-Host "Wrangler deployment successful!" -ForegroundColor Green
+                }
+                else {
+                    Write-Host "Wrangler deployment failed with exit code: $LASTEXITCODE" -ForegroundColor Red
                 }
             }
         }
