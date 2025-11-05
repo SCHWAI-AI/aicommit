@@ -390,8 +390,11 @@ $fullDiff
         git add . 2>&1 | Out-Null
         
         Write-Host "Committing..." -ForegroundColor Yellow
-        $escapedMessage = $finalMessage -replace '"', '""'  # Escape any quotes in the message
-        git commit -m "`"$escapedMessage`""
+        # Write message to temp file to avoid command-line parsing issues
+        $tempMsgFile = [System.IO.Path]::GetTempFileName()
+        Set-Content -Path $tempMsgFile -Value $finalMessage -Encoding UTF8 -NoNewline
+        git commit -F $tempMsgFile
+        Remove-Item $tempMsgFile -Force -ErrorAction SilentlyContinue
         
         if ($LASTEXITCODE -eq 0) {
             Write-Host "`nCommit successful!" -ForegroundColor Green
