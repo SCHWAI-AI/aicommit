@@ -2,7 +2,8 @@ function aicommit {
     param(
         [switch]$push,
         [switch]$clasp,
-        [switch]$wrangler
+        [switch]$wrangler,
+        [switch]$export
     )
     # Check if we're in a git repository
     try {
@@ -124,6 +125,14 @@ function aicommit {
     if ($fullDiff.Length -gt $maxLength) {
         $fullDiff = $fullDiff.Substring(0, $maxLength) + "`n... (diff truncated)"
         Write-Host "Note: Diff was truncated due to length" -ForegroundColor Yellow
+    }
+
+    # Export diff to file if requested
+    if ($export) {
+        $exportFile = "git-diff-export.txt"
+        $fullDiff | Out-File -FilePath $exportFile -Encoding UTF8
+        Write-Host "Diff exported to: $exportFile" -ForegroundColor Green
+        return
     }
 
     # Build the complete prompt

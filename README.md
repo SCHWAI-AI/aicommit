@@ -14,6 +14,7 @@ Generate intelligent git commit messages using Claude AI. This PowerShell module
 - 🚀 **Git Push Support**: Optional flag to push after committing
 - 📦 **Google Apps Script Integration**: Optional clasp push support for GAS projects
 - ☁️ **Cloudflare Workers Deployment**: Optional wrangler deploy support for Workers projects
+- 📤 **Diff Export**: Export the comprehensive diff to a file for review
 
 ## Prerequisites
 
@@ -126,6 +127,9 @@ aicommit -push -clasp
 
 # Commit, push to git, and deploy to wrangler
 aicommit -push -wrangler
+
+# Export diff to file without committing (for review)
+aicommit -export
 ```
 
 The tool will:
@@ -141,6 +145,8 @@ The tool will:
 7. Stage and commit changes
 8. Push to git remote (if -push flag used)
 9. Push to clasp (if -clasp flag used)
+
+**Note:** When using `-export`, the tool exports the diff to `git-diff-export.txt` and exits without calling the AI or committing. This is useful for reviewing what would be analyzed.
 
 ### Example Workflow
 
