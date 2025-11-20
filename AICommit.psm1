@@ -116,6 +116,14 @@ function aicommit {
         return
     }
 
+    # Export diff to file if requested
+    if ($export) {
+        $exportFile = "git-diff-export.txt"
+        $fullDiff | Out-File -FilePath $exportFile -Encoding UTF8
+        Write-Host "Diff exported to: $exportFile" -ForegroundColor Green
+        return
+    }
+
     # Truncate if necessary (configurable via environment variable)
     $maxLength = if ($env:AI_COMMIT_MAX_DIFF_LENGTH) { 
         [int]$env:AI_COMMIT_MAX_DIFF_LENGTH 
@@ -125,14 +133,6 @@ function aicommit {
     if ($fullDiff.Length -gt $maxLength) {
         $fullDiff = $fullDiff.Substring(0, $maxLength) + "`n... (diff truncated)"
         Write-Host "Note: Diff was truncated due to length" -ForegroundColor Yellow
-    }
-
-    # Export diff to file if requested
-    if ($export) {
-        $exportFile = "git-diff-export.txt"
-        $fullDiff | Out-File -FilePath $exportFile -Encoding UTF8
-        Write-Host "Diff exported to: $exportFile" -ForegroundColor Green
-        return
     }
 
     # Build the complete prompt
