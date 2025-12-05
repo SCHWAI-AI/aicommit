@@ -77,9 +77,9 @@ jobs:
       matrix:
         include:
           - name: Homebrew
-            repo: SCHWAI-AI/homebrew-tap
+            repo: SCHW-AI/homebrew-tap
           - name: Scoop
-            repo: SCHWAI-AI/scoop-bucket
+            repo: SCHW-AI/scoop-bucket
     steps:
       - name: Trigger ${{ matrix.name }} update
         uses: peter-evans/repository-dispatch@v2
@@ -103,8 +103,8 @@ jobs:
         run: |
           $version = "${{ github.ref_name }}".TrimStart("v")
           $urls = @(
-            "https://github.com/SCHWAI-AI/aicommit/releases/download/${{ github.ref_name }}/aicommit_Windows_x86_64.zip",
-            "https://github.com/SCHWAI-AI/aicommit/releases/download/${{ github.ref_name }}/aicommit_Windows_i386.zip"
+            "https://github.com/SCHW-AI/aicommit/releases/download/${{ github.ref_name }}/aicommit_Windows_x86_64.zip",
+            "https://github.com/SCHW-AI/aicommit/releases/download/${{ github.ref_name }}/aicommit_Windows_i386.zip"
           )
           
           ./wingetcreate.exe update SCHWAI.AICommit `
@@ -127,7 +127,7 @@ jobs:
           description: |
             🚀 New version available!
             
-            [View Release](https://github.com/SCHWAI-AI/aicommit/releases/tag/${{ github.ref_name }})
+            [View Release](https://github.com/SCHW-AI/aicommit/releases/tag/${{ github.ref_name }})
           color: 0x00ff00
           
       - name: Send Slack notification
@@ -161,7 +161,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@v5
         with:
-          images: ghcr.io/schwai-ai/aicommit
+          images: ghcr.io/SCHW-AI/aicommit
           tags: |
             type=ref,event=tag
             type=semver,pattern={{version}}

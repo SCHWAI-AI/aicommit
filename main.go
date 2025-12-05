@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/SCHWAI-AI/aicommit/cmd"
+	"github.com/SCHW-AI/aicommit/cmd"
 )
 
 func main() {

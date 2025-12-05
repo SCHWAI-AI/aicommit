@@ -26,13 +26,13 @@ Generate intelligent git commit messages using AI. This Go-based CLI tool analyz
 
 #### Homebrew (macOS/Linux)
 ```bash
-brew tap SCHWAI-AI/tap
+brew tap SCHW-AI/tap
 brew install aicommit
 ```
 
 #### Scoop (Windows)
 ```powershell
-scoop bucket add schwai https://github.com/SCHWAI-AI/scoop-bucket
+scoop bucket add schwai https://github.com/SCHW-AI/scoop-bucket
 scoop install aicommit
 ```
 
@@ -69,27 +69,27 @@ pamac install aicommit
 
 #### Docker
 ```bash
-docker run --rm -v $(pwd):/repo ghcr.io/schwai-ai/aicommit
+docker run --rm -v $(pwd):/repo ghcr.io/SCHW-AI/aicommit
 ```
 
 ### Manual Installation
 
-Download the latest binary for your platform from the [releases page](https://github.com/SCHWAI-AI/aicommit/releases).
+Download the latest binary for your platform from the [releases page](https://github.com/SCHW-AI/aicommit/releases).
 
 ```bash
 # Linux/macOS
-curl -L https://github.com/SCHWAI-AI/aicommit/releases/latest/download/aicommit_Linux_x86_64.tar.gz | tar xz
+curl -L https://github.com/SCHW-AI/aicommit/releases/latest/download/aicommit_Linux_x86_64.tar.gz | tar xz
 sudo mv aicommit /usr/local/bin/
 
 # Windows (PowerShell)
-iwr -Uri https://github.com/SCHWAI-AI/aicommit/releases/latest/download/aicommit_Windows_x86_64.zip -OutFile aicommit.zip
+iwr -Uri https://github.com/SCHW-AI/aicommit/releases/latest/download/aicommit_Windows_x86_64.zip -OutFile aicommit.zip
 Expand-Archive aicommit.zip -DestinationPath .
 Move-Item aicommit.exe C:\Windows\System32\
 ```
 
 ### Build from Source
 ```bash
-git clone https://github.com/SCHWAI-AI/aicommit.git
+git clone https://github.com/SCHW-AI/aicommit.git
 cd aicommit
 go build -o aicommit
 sudo mv aicommit /usr/local/bin/
@@ -137,10 +137,10 @@ Edit `~/.config/aicommit/config.yaml`:
 provider: anthropic  # Options: anthropic, gemini, openai
 
 # Model selection
-model: claude-haiku-4-5-20251015  # Or gemini-2.5-flash, gpt-5-mini
+model: claude-haiku-4-5-20251001  # Or gemini-2.5-flash, gpt-5-mini
 
 # Provider-specific models
-anthropic_model: claude-haiku-4-5-20251015
+anthropic_model: claude-haiku-4-5-20251001
 gemini_model: gemini-2.5-flash
 openai_model: gpt-5-mini
 
@@ -275,7 +275,7 @@ This Go implementation offers several advantages over the original PowerShell ve
 ### Building
 ```bash
 # Clone repository
-git clone https://github.com/SCHWAI-AI/aicommit.git
+git clone https://github.com/SCHW-AI/aicommit.git
 cd aicommit
 
 # Build
@@ -362,7 +362,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ## Author
 
 **Aaron Zlotowitz**  
-[SCHWAI](https://github.com/SCHWAI-AI)
+[SCHWAI](https://github.com/SCHW-AI)
 
 ## Acknowledgments
 
@@ -375,6 +375,6 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ## Support
 
 If you encounter issues or have questions:
-- [Open an issue](https://github.com/SCHWAI-AI/aicommit/issues)
-- Check [existing issues](https://github.com/SCHWAI-AI/aicommit/issues?q=is%3Aissue)
-- Read the [FAQ](https://github.com/SCHWAI-AI/aicommit/wiki/FAQ)
+- [Open an issue](https://github.com/SCHW-AI/aicommit/issues)
+- Check [existing issues](https://github.com/SCHW-AI/aicommit/issues?q=is%3Aissue)
+- Read the [FAQ](https://github.com/SCHW-AI/aicommit/wiki/FAQ)

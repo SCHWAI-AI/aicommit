@@ -8,7 +8,7 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/SCHWAI-AI/aicommit/internal/config"
+	"github.com/SCHW-AI/aicommit/internal/config"
 )
 
 type GeminiClient struct {

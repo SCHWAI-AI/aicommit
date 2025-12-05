@@ -4,10 +4,10 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/SCHWAI-AI/aicommit/internal/config"
-	"github.com/SCHWAI-AI/aicommit/internal/git"
-	"github.com/SCHWAI-AI/aicommit/internal/llm"
-	"github.com/SCHWAI-AI/aicommit/internal/prompt"
+	"github.com/SCHW-AI/aicommit/internal/config"
+	"github.com/SCHW-AI/aicommit/internal/git"
+	"github.com/SCHW-AI/aicommit/internal/llm"
+	"github.com/SCHW-AI/aicommit/internal/prompt"
 	"github.com/fatih/color"
 	"github.com/spf13/cobra"
 )

@@ -34,7 +34,7 @@ builds:
       - goos: windows
         goarch: arm64
     ldflags:
-      - -s -w -X github.com/SCHWAI-AI/aicommit/cmd.version={{.Version}}
+      - -s -w -X github.com/SCHW-AI/aicommit/cmd.version={{.Version}}
     mod_timestamp: "{{ .CommitTimestamp }}"
 
 archives:
@@ -76,7 +76,7 @@ nfpms:
     package_name: aicommit
     file_name_template: "{{ .ConventionalFileName }}"
     vendor: SCHWAI
-    homepage: https://github.com/SCHWAI-AI/aicommit
+    homepage: https://github.com/SCHW-AI/aicommit
     maintainer: Aaron Zlotowitz <aaron@schwai.ai>
     description: AI-powered Git commit message generator
     license: MIT
@@ -111,7 +111,7 @@ nfpms:
 brews:
   - name: aicommit
     repository:
-      owner: SCHWAI-AI
+      owner: SCHW-AI
       name: homebrew-tap
       branch: main
       token: "{{ .Env.GITHUB_TOKEN }}"
@@ -119,7 +119,7 @@ brews:
       name: AICommit Bot
       email: bot@schwai.ai
     folder: Formula
-    homepage: https://github.com/SCHWAI-AI/aicommit
+    homepage: https://github.com/SCHW-AI/aicommit
     description: AI-powered Git commit message generator
     license: MIT
     test: |
@@ -144,14 +144,14 @@ brews:
 scoops:
   - name: aicommit
     repository:
-      owner: SCHWAI-AI
+      owner: SCHW-AI
       name: scoop-bucket
       branch: main
       token: "{{ .Env.GITHUB_TOKEN }}"
     commit_author:
       name: AICommit Bot
       email: bot@schwai.ai
-    homepage: https://github.com/SCHWAI-AI/aicommit
+    homepage: https://github.com/SCHW-AI/aicommit
     description: AI-powered Git commit message generator
     license: MIT
 
@@ -159,12 +159,12 @@ scoops:
 chocolateys:
   - name: aicommit
     authors: Aaron Zlotowitz
-    project_url: https://github.com/SCHWAI-AI/aicommit
-    license_url: https://github.com/SCHWAI-AI/aicommit/blob/main/LICENSE
+    project_url: https://github.com/SCHW-AI/aicommit
+    license_url: https://github.com/SCHW-AI/aicommit/blob/main/LICENSE
     require_license_acceptance: false
-    project_source_url: https://github.com/SCHWAI-AI/aicommit
-    docs_url: https://github.com/SCHWAI-AI/aicommit/blob/main/README.md
-    bug_tracker_url: https://github.com/SCHWAI-AI/aicommit/issues
+    project_source_url: https://github.com/SCHW-AI/aicommit
+    docs_url: https://github.com/SCHW-AI/aicommit/blob/main/README.md
+    bug_tracker_url: https://github.com/SCHW-AI/aicommit/issues
     tags: "git ai commit cli developer-tools productivity"
     summary: AI-powered Git commit message generator
     description: |
@@ -177,7 +177,7 @@ chocolateys:
       - Interactive message editing
       - Secure credential storage
       - Git push and clasp integration
-    release_notes: "https://github.com/SCHWAI-AI/aicommit/releases/tag/v{{ .Version }}"
+    release_notes: "https://github.com/SCHW-AI/aicommit/releases/tag/v{{ .Version }}"
     api_key: "{{ .Env.CHOCOLATEY_API_KEY }}"
     source_repo: https://push.chocolatey.org/
     skip_publish: false
@@ -189,9 +189,9 @@ winget:
     author: Aaron Zlotowitz
     short_description: AI-powered Git commit message generator
     license: MIT
-    license_url: https://github.com/SCHWAI-AI/aicommit/blob/main/LICENSE
-    homepage: https://github.com/SCHWAI-AI/aicommit
-    publisher_url: https://github.com/SCHWAI-AI
+    license_url: https://github.com/SCHW-AI/aicommit/blob/main/LICENSE
+    homepage: https://github.com/SCHW-AI/aicommit
+    publisher_url: https://github.com/SCHW-AI
     package_identifier: SCHWAI.AICommit
     repository:
       owner: microsoft
@@ -211,8 +211,8 @@ winget:
 # Docker Images
 dockers:
   - image_templates:
-      - "ghcr.io/schwai-ai/aicommit:{{ .Version }}"
-      - "ghcr.io/schwai-ai/aicommit:latest"
+      - "ghcr.io/SCHW-AI/aicommit:{{ .Version }}"
+      - "ghcr.io/SCHW-AI/aicommit:latest"
     dockerfile: Dockerfile
     build_flag_templates:
       - "--pull"
@@ -226,7 +226,7 @@ dockers:
 # GitHub Release
 release:
   github:
-    owner: SCHWAI-AI
+    owner: SCHW-AI
     name: aicommit
   name_template: "v{{.Version}}"
   draft: false
@@ -242,13 +242,13 @@ release:
 
     ### Homebrew (macOS/Linux)
     ```bash
-    brew tap SCHWAI-AI/tap
+    brew tap SCHW-AI/tap
     brew install aicommit
     ```
 
     ### Scoop (Windows)
     ```powershell
-    scoop bucket add schwai https://github.com/SCHWAI-AI/scoop-bucket
+    scoop bucket add schwai https://github.com/SCHW-AI/scoop-bucket
     scoop install aicommit
     ```
 
@@ -264,10 +264,10 @@ release:
 
     ### Docker
     ```bash
-    docker run --rm -v $(pwd):/repo ghcr.io/schwai-ai/aicommit
+    docker run --rm -v $(pwd):/repo ghcr.io/SCHW-AI/aicommit
     ```
 
-    **Full Documentation**: https://github.com/SCHWAI-AI/aicommit
+    **Full Documentation**: https://github.com/SCHW-AI/aicommit
 
 # Announce releases
 announce:

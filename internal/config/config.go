@@ -42,13 +42,13 @@ func Initialize(configFile string) error {
 	// Initialize Viper
 	viper.SetConfigName("config")
 	viper.SetConfigType("yaml")
-	
+
 	if configFile != "" {
 		viper.SetConfigFile(configFile)
 	} else {
 		viper.AddConfigPath(configDir)
 		viper.AddConfigPath(".")
-		
+
 		// Also check old PowerShell locations for migration
 		if runtime.GOOS == "windows" {
 			viper.AddConfigPath(os.ExpandEnv("$USERPROFILE\\Documents\\WindowsPowerShell\\Modules\\AICommit"))
@@ -56,10 +56,10 @@ func Initialize(configFile string) error {
 	}
 
 	// Set defaults
-	viper.SetDefault("model", "claude-haiku-4-5-20251015")
+	viper.SetDefault("model", "claude-haiku-4-5-20251001")
 	viper.SetDefault("max_diff_length", 30000)
 	viper.SetDefault("provider", "anthropic")
-	viper.SetDefault("anthropic_model", "claude-haiku-4-5-20251015")
+	viper.SetDefault("anthropic_model", "claude-haiku-4-5-20251001")
 	viper.SetDefault("gemini_model", "gemini-2.5-flash")
 	viper.SetDefault("openai_model", "gpt-5-mini")
 
@@ -107,12 +107,12 @@ func initKeyring() error {
 		ServiceName: serviceName,
 		// Use file backend on servers or when system keyring is unavailable
 		AllowedBackends: []keyring.BackendType{
-			keyring.KeychainBackend,     // macOS
+			keyring.KeychainBackend,      // macOS
 			keyring.WinCredBackend,       // Windows
 			keyring.SecretServiceBackend, // Linux (GNOME Keyring, KWallet)
 			keyring.FileBackend,          // Fallback (encrypted file)
 		},
-		FileDir:         filepath.Join(xdg.DataHome, "aicommit", "keys"),
+		FileDir: filepath.Join(xdg.DataHome, "aicommit", "keys"),
 		FilePasswordFunc: func(prompt string) (string, error) {
 			// In production, this should prompt for a password
 			// For now, use a default password (not secure for production)
@@ -129,10 +129,10 @@ func createDefaultConfig(path string) error {
 provider: anthropic
 
 # Model selection (can also be set via AI_COMMIT_MODEL env var)
-model: claude-haiku-4-5-20251015
+model: claude-haiku-4-5-20251001
 
 # Provider-specific models
-anthropic_model: claude-haiku-4-5-20251015
+anthropic_model: claude-haiku-4-5-20251001
 gemini_model: gemini-2.5-flash
 openai_model: gpt-5-mini
 
@@ -159,7 +159,7 @@ func GetConfig() *Config {
 // GetAPIKey retrieves the API key for the current provider
 func (c *Config) GetAPIKey() string {
 	provider := strings.ToLower(c.Provider)
-	
+
 	// Environment variable names
 	envVars := map[string][]string{
 		"anthropic": {"ANTHROPIC_API_KEY", "AI_COMMIT_ANTHROPIC_KEY"},

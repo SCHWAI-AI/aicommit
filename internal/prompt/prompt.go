@@ -8,7 +8,7 @@ import (
 	"runtime"
 	"strings"
 
-	"github.com/SCHWAI-AI/aicommit/internal/llm"
+	"github.com/SCHW-AI/aicommit/internal/llm"
 	"github.com/manifoldco/promptui"
 )
 

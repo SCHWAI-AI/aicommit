@@ -7,7 +7,7 @@ import (
 	"io"
 	"net/http"
 
-	"github.com/SCHWAI-AI/aicommit/internal/config"
+	"github.com/SCHW-AI/aicommit/internal/config"
 )
 
 type AnthropicClient struct {
@@ -20,12 +20,12 @@ func NewAnthropicClient(apiKey, model string) (*AnthropicClient, error) {
 	if apiKey == "" {
 		return nil, fmt.Errorf("Anthropic API key is required")
 	}
-	
+
 	// Default model if not specified
 	if model == "" || !isClaudeModel(model) {
-		model = "claude-haiku-4-5-20251015"
+		model = "claude-haiku-4-5-20251001"
 	}
-	
+
 	return &AnthropicClient{
 		apiKey: apiKey,
 		model:  model,
@@ -37,7 +37,7 @@ func isClaudeModel(model string) bool {
 		// Claude 4.5 family (latest)
 		"claude-opus-4-5-20251101",
 		"claude-sonnet-4-5-20250929",
-		"claude-haiku-4-5-20251015",
+		"claude-haiku-4-5-20251001",
 
 		// Claude 4.1 family
 		"claude-opus-4-1-20250805",
@@ -65,7 +65,7 @@ func isClaudeModel(model string) bool {
 func (c *AnthropicClient) GenerateCommitMessage(diff string) (*CommitMessage, error) {
 	cfg := config.GetConfig()
 	diff = TruncateDiff(diff, cfg.MaxDiffLength)
-	
+
 	// Prepare the request
 	reqBody := anthropicRequest{
 		Model:     c.model,
@@ -82,22 +82,22 @@ func (c *AnthropicClient) GenerateCommitMessage(diff string) (*CommitMessage, er
 			},
 		},
 	}
-	
+
 	jsonData, err := json.Marshal(reqBody)
 	if err != nil {
 		return nil, fmt.Errorf("failed to marshal request: %w", err)
 	}
-	
+
 	// Create the HTTP request
 	req, err := http.NewRequest("POST", "https://api.anthropic.com/v1/messages", bytes.NewBuffer(jsonData))
 	if err != nil {
 		return nil, fmt.Errorf("failed to create request: %w", err)
 	}
-	
+
 	req.Header.Set("Content-Type", "application/json")
 	req.Header.Set("x-api-key", c.apiKey)
 	req.Header.Set("anthropic-version", "2023-06-01")
-	
+
 	// Send the request
 	client := &http.Client{}
 	resp, err := client.Do(req)
@@ -105,13 +105,13 @@ func (c *AnthropicClient) GenerateCommitMessage(diff string) (*CommitMessage, er
 		return nil, fmt.Errorf("failed to send request: %w", err)
 	}
 	defer resp.Body.Close()
-	
+
 	// Read the response
 	body, err := io.ReadAll(resp.Body)
 	if err != nil {
 		return nil, fmt.Errorf("failed to read response: %w", err)
 	}
-	
+
 	if resp.StatusCode != http.StatusOK {
 		var errorResp anthropicErrorResponse
 		if err := json.Unmarshal(body, &errorResp); err == nil && errorResp.Error.Message != "" {
@@ -119,31 +119,31 @@ func (c *AnthropicClient) GenerateCommitMessage(diff string) (*CommitMessage, er
 		}
 		return nil, fmt.Errorf("Anthropic API error: status %d - %s", resp.StatusCode, string(body))
 	}
-	
+
 	// Parse the response
 	var anthropicResp anthropicResponse
 	if err := json.Unmarshal(body, &anthropicResp); err != nil {
 		return nil, fmt.Errorf("failed to parse response: %w", err)
 	}
-	
+
 	if len(anthropicResp.Content) == 0 {
 		return nil, fmt.Errorf("empty response from Anthropic")
 	}
-	
+
 	// Parse the commit message from the response
 	return ParseResponse(anthropicResp.Content[0].Text)
 }
 
 // Anthropic API types
 type anthropicRequest struct {
-	Model     string               `json:"model"`
-	MaxTokens int                  `json:"max_tokens"`
-	Messages  []anthropicMessage   `json:"messages"`
+	Model     string             `json:"model"`
+	MaxTokens int                `json:"max_tokens"`
+	Messages  []anthropicMessage `json:"messages"`
 }
 
 type anthropicMessage struct {
-	Role    string              `json:"role"`
-	Content []anthropicContent  `json:"content"`
+	Role    string             `json:"role"`
+	Content []anthropicContent `json:"content"`
 }
 
 type anthropicContent struct {
@@ -152,10 +152,10 @@ type anthropicContent struct {
 }
 
 type anthropicResponse struct {
-	ID       string `json:"id"`
-	Type     string `json:"type"`
-	Role     string `json:"role"`
-	Content  []struct {
+	ID      string `json:"id"`
+	Type    string `json:"type"`
+	Role    string `json:"role"`
+	Content []struct {
 		Type string `json:"type"`
 		Text string `json:"text"`
 	} `json:"content"`

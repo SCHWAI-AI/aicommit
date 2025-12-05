@@ -4,7 +4,7 @@
 BINARY_NAME := aicommit
 VERSION := $(shell git describe --tags --always --dirty)
 BUILD_TIME := $(shell date -u '+%Y-%m-%d_%H:%M:%S')
-LDFLAGS := -ldflags "-s -w -X github.com/SCHWAI-AI/aicommit/cmd.version=$(VERSION)"
+LDFLAGS := -ldflags "-s -w -X github.com/SCHW-AI/aicommit/cmd.version=$(VERSION)"
 GOFILES := $(shell find . -name "*.go" -type f -not -path "./vendor/*")
 
 # Colors for output
@@ -170,12 +170,12 @@ setup:
 ## Docker build
 docker-build:
 	@echo "$(GREEN)Building Docker image...$(NC)"
-	@docker build -t ghcr.io/schwai-ai/aicommit:local .
+	@docker build -t ghcr.io/SCHW-AI/aicommit:local .
 	@echo "$(GREEN)Docker build complete!$(NC)"
 
 ## Docker run
 docker-run: docker-build
-	@docker run --rm -v $(PWD):/repo ghcr.io/schwai-ai/aicommit:local
+	@docker run --rm -v $(PWD):/repo ghcr.io/SCHW-AI/aicommit:local
 
 ## Show version
 version:

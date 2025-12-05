@@ -1,20 +1,20 @@
 #!/bin/sh
 #
 # AICommit Installation Script
-# https://github.com/SCHWAI-AI/aicommit
+# https://github.com/SCHW-AI/aicommit
 #
 # This script installs aicommit on your system.
 # It detects your OS and architecture and downloads the appropriate binary.
 #
 # Usage:
-#   curl -fsSL https://raw.githubusercontent.com/SCHWAI-AI/aicommit/main/install.sh | sh
-#   wget -qO- https://raw.githubusercontent.com/SCHWAI-AI/aicommit/main/install.sh | sh
+#   curl -fsSL https://raw.githubusercontent.com/SCHW-AI/aicommit/main/install.sh | sh
+#   wget -qO- https://raw.githubusercontent.com/SCHW-AI/aicommit/main/install.sh | sh
 #
 
 set -e
 
 # Configuration
-REPO_OWNER="SCHWAI-AI"
+REPO_OWNER="SCHW-AI"
 REPO_NAME="aicommit"
 BINARY_NAME="aicommit"
 INSTALL_DIR="${INSTALL_DIR:-/usr/local/bin}"
@@ -267,7 +267,7 @@ suggest_package_manager() {
         darwin)
             if command -v brew > /dev/null 2>&1; then
                 info "  Using Homebrew:"
-                info "    brew tap SCHWAI-AI/tap"
+                info "    brew tap SCHW-AI/tap"
                 info "    brew install aicommit"
             fi
             ;;
@@ -287,7 +287,7 @@ suggest_package_manager() {
             ;;
         windows)
             info "  Using Scoop:"
-            info "    scoop bucket add schwai https://github.com/SCHWAI-AI/scoop-bucket"
+            info "    scoop bucket add schwai https://github.com/SCHW-AI/scoop-bucket"
             info "    scoop install aicommit"
             info ""
             info "  Using Chocolatey:"
