@@ -56,12 +56,12 @@ func Initialize(configFile string) error {
 	}
 
 	// Set defaults
-	viper.SetDefault("model", "gemini-2.0-flash")
+	viper.SetDefault("model", "claude-haiku-4-5-20251015")
 	viper.SetDefault("max_diff_length", 30000)
-	viper.SetDefault("provider", "gemini")
-	viper.SetDefault("anthropic_model", "claude-3-5-haiku-20241022")
-	viper.SetDefault("gemini_model", "gemini-2.0-flash")
-	viper.SetDefault("openai_model", "gpt-4-turbo")
+	viper.SetDefault("provider", "anthropic")
+	viper.SetDefault("anthropic_model", "claude-haiku-4-5-20251015")
+	viper.SetDefault("gemini_model", "gemini-2.5-flash")
+	viper.SetDefault("openai_model", "gpt-5-mini")
 
 	// Environment variable support
 	viper.SetEnvPrefix("AI_COMMIT")
@@ -124,17 +124,17 @@ func initKeyring() error {
 
 func createDefaultConfig(path string) error {
 	defaultConfig := `# AICommit Configuration
-# 
+#
 # Available providers: anthropic, gemini, openai
-provider: gemini
+provider: anthropic
 
 # Model selection (can also be set via AI_COMMIT_MODEL env var)
-model: gemini-2.0-flash
+model: claude-haiku-4-5-20251015
 
 # Provider-specific models
-anthropic_model: claude-3-5-haiku-20241022
-gemini_model: gemini-2.0-flash
-openai_model: gpt-4-turbo
+anthropic_model: claude-haiku-4-5-20251015
+gemini_model: gemini-2.5-flash
+openai_model: gpt-5-mini
 
 # Maximum diff size in characters (default: 30000)
 max_diff_length: 30000
@@ -142,7 +142,7 @@ max_diff_length: 30000
 # Note: API keys should be stored securely using 'aicommit config set-key'
 # or via environment variables:
 # - ANTHROPIC_API_KEY
-# - GEMINI_API_KEY 
+# - GEMINI_API_KEY
 # - OPENAI_API_KEY
 `
 	return os.WriteFile(path, []byte(defaultConfig), 0644)

@@ -22,6 +22,12 @@ func IsClaspProject() bool {
 	return err == nil
 }
 
+// IsWranglerProject checks if wrangler.toml exists
+func IsWranglerProject() bool {
+	_, err := os.Stat("wrangler.toml")
+	return err == nil
+}
+
 // GetFullDiff gets the complete diff including tracked and untracked files
 func GetFullDiff() (string, error) {
 	var fullDiff strings.Builder
@@ -118,9 +124,26 @@ func ClaspPush() error {
 	cmd := exec.Command("clasp", "push")
 	var stderr bytes.Buffer
 	cmd.Stderr = &stderr
-	
+
 	if err := cmd.Run(); err != nil {
 		return fmt.Errorf("clasp push failed: %v - %s", err, stderr.String())
+	}
+	return nil
+}
+
+// WranglerDeploy deploys to Cloudflare Workers
+func WranglerDeploy() error {
+	// Check if wrangler is installed
+	if _, err := exec.LookPath("wrangler"); err != nil {
+		return fmt.Errorf("wrangler is not installed")
+	}
+
+	cmd := exec.Command("wrangler", "deploy")
+	var stderr bytes.Buffer
+	cmd.Stderr = &stderr
+
+	if err := cmd.Run(); err != nil {
+		return fmt.Errorf("wrangler deploy failed: %v - %s", err, stderr.String())
 	}
 	return nil
 }

@@ -24,7 +24,7 @@ func NewOpenAIClient(apiKey, model string) (*OpenAIClient, error) {
 	
 	// Default model if not specified
 	if model == "" || !isOpenAIModel(model) {
-		model = "gpt-4-turbo"
+		model = "gpt-5-mini"
 	}
 	
 	return &OpenAIClient{
@@ -35,6 +35,18 @@ func NewOpenAIClient(apiKey, model string) (*OpenAIClient, error) {
 
 func isOpenAIModel(model string) bool {
 	validModels := []string{
+		// GPT-5 family (latest)
+		"gpt-5.1",
+		"gpt-5",
+		"gpt-5-mini",
+		"gpt-5-nano",
+
+		// GPT-4.1 family
+		"gpt-4.1",
+		"gpt-4.1-mini",
+		"gpt-4.1-nano",
+
+		// GPT-4 family (legacy)
 		"gpt-4",
 		"gpt-4-turbo",
 		"gpt-4-turbo-preview",
@@ -44,7 +56,7 @@ func isOpenAIModel(model string) bool {
 		"gpt-3.5-turbo-0125",
 		"gpt-3.5-turbo-1106",
 	}
-	
+
 	for _, valid := range validModels {
 		if strings.HasPrefix(model, valid) {
 			return true

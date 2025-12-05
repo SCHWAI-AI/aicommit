@@ -23,7 +23,7 @@ func NewAnthropicClient(apiKey, model string) (*AnthropicClient, error) {
 	
 	// Default model if not specified
 	if model == "" || !isClaudeModel(model) {
-		model = "claude-3-5-haiku-20241022"
+		model = "claude-haiku-4-5-20251015"
 	}
 	
 	return &AnthropicClient{
@@ -34,13 +34,25 @@ func NewAnthropicClient(apiKey, model string) (*AnthropicClient, error) {
 
 func isClaudeModel(model string) bool {
 	validModels := []string{
+		// Claude 4.5 family (latest)
+		"claude-opus-4-5-20251101",
+		"claude-sonnet-4-5-20250929",
+		"claude-haiku-4-5-20251015",
+
+		// Claude 4.1 family
+		"claude-opus-4-1-20250805",
+
+		// Claude 4 family
+		"claude-sonnet-4-20250522",
+
+		// Legacy Claude 3 (still supported but deprecated)
 		"claude-3-opus-20240229",
 		"claude-3-sonnet-20240229",
 		"claude-3-5-sonnet-20240620",
 		"claude-3-haiku-20240307",
 		"claude-3-5-haiku-20241022",
 	}
-	
+
 	for _, valid := range validModels {
 		if model == valid {
 			return true

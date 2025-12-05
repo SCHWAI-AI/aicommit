@@ -24,7 +24,7 @@ func NewGeminiClient(apiKey, model string) (*GeminiClient, error) {
 	
 	// Default model if not specified
 	if model == "" || !isGeminiModel(model) {
-		model = "gemini-2.0-flash"
+		model = "gemini-2.5-flash"
 	}
 	
 	// Ensure model has proper prefix
@@ -41,16 +41,23 @@ func NewGeminiClient(apiKey, model string) (*GeminiClient, error) {
 func isGeminiModel(model string) bool {
 	// Remove "models/" prefix if present
 	model = strings.TrimPrefix(model, "models/")
-	
+
 	validModels := []string{
+		// Gemini 2.5 family (latest stable)
+		"gemini-2.5-pro",
+		"gemini-2.5-flash",
+		"gemini-2.5-flash-lite",
+
+		// Gemini 2.0 family
+		"gemini-2.0-flash",
+
+		// Legacy Gemini 1.5 (deprecated)
 		"gemini-1.5-pro",
 		"gemini-1.5-flash",
-		"gemini-2.0-flash",
-		"gemini-2.0-pro",
 		"gemini-pro",
 		"gemini-pro-vision",
 	}
-	
+
 	for _, valid := range validModels {
 		if model == valid {
 			return true

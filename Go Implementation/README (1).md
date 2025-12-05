@@ -17,6 +17,8 @@ Generate intelligent git commit messages using AI. This Go-based CLI tool analyz
 - ⚡ **Fast & Native**: Written in Go for optimal performance
 - 🚀 **Git Push Support**: Optional flag to push after committing
 - 📦 **Google Apps Script Integration**: Optional clasp push support
+- ☁️ **Cloudflare Workers Integration**: Optional wrangler deploy support
+- 📤 **Export Mode**: Export diff to file for review without committing
 
 ## Installation
 
@@ -132,15 +134,15 @@ export OPENAI_API_KEY="sk-proj-your-key"
 Edit `~/.config/aicommit/config.yaml`:
 ```yaml
 # Provider selection
-provider: gemini  # Options: anthropic, gemini, openai
+provider: anthropic  # Options: anthropic, gemini, openai
 
 # Model selection
-model: gemini-2.0-flash  # Or claude-3-5-haiku-20241022, gpt-4-turbo
+model: claude-haiku-4-5-20251015  # Or gemini-2.5-flash, gpt-5-mini
 
 # Provider-specific models
-anthropic_model: claude-3-5-haiku-20241022
-gemini_model: gemini-2.0-flash
-openai_model: gpt-4-turbo
+anthropic_model: claude-haiku-4-5-20251015
+gemini_model: gemini-2.5-flash
+openai_model: gpt-5-mini
 
 # Maximum diff size in characters
 max_diff_length: 30000
@@ -171,8 +173,14 @@ aicommit --push
 # Commit and push to clasp (Google Apps Script)
 aicommit --clasp
 
-# Commit and push to both
-aicommit --push --clasp
+# Commit and deploy to Cloudflare Workers
+aicommit --wrangler
+
+# Commit and push to both git and wrangler
+aicommit --push --wrangler
+
+# Export diff to file without committing (for review)
+aicommit --export
 
 # Use specific configuration file
 aicommit --config ~/custom-config.yaml
@@ -214,11 +222,11 @@ Created: a3f2d45 Add user authentication module
 
 ### Provider Switching
 ```bash
-# Use Claude for one commit
-AI_COMMIT_PROVIDER=anthropic aicommit
+# Use Gemini for one commit
+AI_COMMIT_PROVIDER=gemini aicommit
 
-# Use GPT-4 for one commit
-AI_COMMIT_PROVIDER=openai AI_COMMIT_MODEL=gpt-4-turbo aicommit
+# Use GPT-5 for one commit
+AI_COMMIT_PROVIDER=openai AI_COMMIT_MODEL=gpt-5-mini aicommit
 ```
 
 ### Custom Diff Length

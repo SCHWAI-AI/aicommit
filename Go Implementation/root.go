@@ -13,10 +13,12 @@ import (
 )
 
 var (
-	pushFlag  bool
-	claspFlag bool
-	cfgFile   string
-	version   = "1.0.0"
+	pushFlag     bool
+	claspFlag    bool
+	wranglerFlag bool
+	exportFlag   bool
+	cfgFile      string
+	version      = "1.0.0"
 )
 
 var rootCmd = &cobra.Command{
@@ -40,6 +42,8 @@ func init() {
 	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.config/aicommit/config.yaml)")
 	rootCmd.Flags().BoolVarP(&pushFlag, "push", "p", false, "Push to git remote after committing")
 	rootCmd.Flags().BoolVarP(&claspFlag, "clasp", "c", false, "Push to clasp after committing (for Google Apps Script projects)")
+	rootCmd.Flags().BoolVarP(&wranglerFlag, "wrangler", "w", false, "Deploy to Cloudflare Workers after committing")
+	rootCmd.Flags().BoolVarP(&exportFlag, "export", "x", false, "Export diff to file without committing")
 	rootCmd.Version = version
 }
 
@@ -72,6 +76,13 @@ func runCommit(cmd *cobra.Command, args []string) error {
 		}
 	}
 
+	// Check for wrangler if flag is set
+	if wranglerFlag {
+		if !git.IsWranglerProject() {
+			return fmt.Errorf("not in a wrangler project (wrangler.toml not found)")
+		}
+	}
+
 	// Get the diff
 	color.Yellow("Analyzing changes...")
 	diff, err := git.GetFullDiff()
@@ -81,6 +92,16 @@ func runCommit(cmd *cobra.Command, args []string) error {
 
 	if diff == "" {
 		color.Green("No changes to commit")
+		return nil
+	}
+
+	// Export diff to file if requested
+	if exportFlag {
+		exportFile := "git-diff-export.txt"
+		if err := os.WriteFile(exportFile, []byte(diff), 0644); err != nil {
+			return fmt.Errorf("failed to export diff: %w", err)
+		}
+		color.Green("Diff exported to: %s", exportFile)
 		return nil
 	}
 
@@ -174,6 +195,16 @@ func runCommit(cmd *cobra.Command, args []string) error {
 					color.Red("Clasp push failed: %v", err)
 				} else {
 					color.Green("Clasp push successful!")
+				}
+			}
+
+			// Deploy to wrangler if requested
+			if wranglerFlag {
+				color.Yellow("Deploying to Cloudflare Workers...")
+				if err := git.WranglerDeploy(); err != nil {
+					color.Red("Wrangler deployment failed: %v", err)
+				} else {
+					color.Green("Wrangler deployment successful!")
 				}
 			}
 		}
