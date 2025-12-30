@@ -59,8 +59,8 @@ notepad $PROFILE
 Import-Module "C:\path\to\aicommit-powershell\AICommit.psm1"
 
 # API Keys (set the ones you need)
-$env:ANTHROPIC_API_KEY = "your-anthropic-key-here"
-$env:GEMINI_API_KEY = "your-google-key-here"
+$env:ANTHROPIC_API_KEY_AICOMMIT = "your-anthropic-key-here"
+$env:GEMINI_API_KEY_AICOMMIT = "your-google-key-here"
 
 # Your preferred model (optional, defaults to gemini-2.5-flash)
 $env:AI_COMMIT_MODEL = "gemini-2.5-flash"
@@ -77,16 +77,16 @@ The module supports both Claude (Anthropic) and Gemini (Google) models. Set the 
 
 **For Gemini (default):**
 ```powershell
-$env:GEMINI_API_KEY = "your-google-api-key-here"
+$env:GEMINI_API_KEY_AICOMMIT = "your-google-api-key-here"
 ```
 For Claude:
 ```powershell
-$env:ANTHROPIC_API_KEY = "sk-ant-api04-your-key-here"
+$env:ANTHROPIC_API_KEY_AICOMMIT = "sk-ant-api04-your-key-here"
 ```
 For permanent setup (add both to your profile if you want to switch between them):
 ```powershell
-Add-Content $PROFILE '$env:GEMINI_API_KEY = "your-google-api-key-here"'
-Add-Content $PROFILE '$env:ANTHROPIC_API_KEY = "sk-ant-api04-your-key-here"'
+Add-Content $PROFILE '$env:GEMINI_API_KEY_AICOMMIT = "your-google-api-key-here"'
+Add-Content $PROFILE '$env:ANTHROPIC_API_KEY_AICOMMIT = "sk-ant-api04-your-key-here"'
 ```
 And restart your profile:
 ```powershell
@@ -210,8 +210,8 @@ The module uses these environment variables:
 
 - **`AI_COMMIT_MODEL`**: Your preferred AI model
 - **`AI_COMMIT_MAX_DIFF_LENGTH`**: Maximum diff size in characters (default: `30000`)
-- **`GEMINI_API_KEY`**: Required for Gemini models
-- **`ANTHROPIC_API_KEY`**: Required for Claude models
+- **`GEMINI_API_KEY_AICOMMIT`**: Required for Gemini models
+- **`ANTHROPIC_API_KEY_AICOMMIT`**: Required for Claude models
 
 
 ## Troubleshooting
@@ -220,8 +220,8 @@ The module uses these environment variables:
 - Ensure you're in a directory initialized with `git init`
 
 ### "API_KEY environment variable not set"
-- For Gemini: Check with `echo $env:GEMINI_API_KEY`
-- For Claude: Check with `echo $env:ANTHROPIC_API_KEY`
+- For Gemini: Check with `echo $env:GEMINI_API_KEY_AICOMMIT`
+- For Claude: Check with `echo $env:ANTHROPIC_API_KEY_AICOMMIT`
 - Ensure you've restarted PowerShell after setting permanent environment variables
 
 ### API Errors

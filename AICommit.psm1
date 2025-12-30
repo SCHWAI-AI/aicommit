@@ -48,19 +48,19 @@ function aicommit {
     # Detect carrier and check for appropriate API key
     if ($AI_MODEL -like "claude-*") {
         $carrier = "anthropic"
-        $apiKey = $env:ANTHROPIC_API_KEY
+        $apiKey = $env:ANTHROPIC_API_KEY_AICOMMIT
         if ([string]::IsNullOrWhiteSpace($apiKey)) {
-            Write-Host "Error: ANTHROPIC_API_KEY environment variable not set" -ForegroundColor Red
-            Write-Host "Set it with: `$env:ANTHROPIC_API_KEY = 'your-api-key-here'" -ForegroundColor Yellow
+            Write-Host "Error: ANTHROPIC_API_KEY_AICOMMIT environment variable not set" -ForegroundColor Red
+            Write-Host "Set it with: `$env:ANTHROPIC_API_KEY_AICOMMIT = 'your-api-key-here'" -ForegroundColor Yellow
             return
         }
     } elseif ($AI_MODEL -like "gemini-*" -or $AI_MODEL -like "models/gemini-*") {
         $carrier = "google"
         # Check for Gemini API key
-        $apiKey = $env:GEMINI_API_KEY
+        $apiKey = $env:GEMINI_API_KEY_AICOMMIT
         if ([string]::IsNullOrWhiteSpace($apiKey)) {
-            Write-Host "Error: GEMINI_API_KEY environment variable not set" -ForegroundColor Red
-            Write-Host "Set it with: `$env:GEMINI_API_KEY = 'your-api-key-here'" -ForegroundColor Yellow
+            Write-Host "Error: GEMINI_API_KEY_AICOMMIT environment variable not set" -ForegroundColor Red
+            Write-Host "Set it with: `$env:GEMINI_API_KEY_AICOMMIT = 'your-api-key-here'" -ForegroundColor Yellow
             return
         }
     } else {
